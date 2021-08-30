@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:amity_sdk_flutter/amity_sdk_flutter.dart';
 import 'package:amity_sdk_flutter/community_plugin_channel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,8 +29,10 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     try {
       // platformVersion = await AmitySdkFlutter.platformVersion ?? 'Unknown platform version';
-      // platformVersion = await AmitySdkFlutter.registerApp("b0ede85a388aa6634c638f4e535b178ad40a84b1ee316828") ?? 'Unknown platform version';
-      platformVersion = await CommunityPluginChannel.createCommunity() ?? "Not Created";
+      // platformVersion = await AmitySdkFlutter.
+      platformVersion = await CommunityPluginChannel.registerApp(
+              "b0ede85a388aa6634c638f4e535b178ad40a84b1ee316828") ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -46,15 +47,37 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void createComm() async {
+    var categories = List<String>.filled(2, "", growable: false);
+    categories.add("hello");
+    categories.add("test");
+    await CommunityPluginChannel.createCommunity(
+      "MyFirstNewComm", true, "No description",categories , null
+    );
+  }
+
+  void regUser() async {
+    await CommunityPluginChannel.authenticateUser("a@aa.ccc");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: GestureDetector(onTap: (){
+            regUser();
+            },
+            child: const Text('Plugin example app'),
+          )
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: GestureDetector(
+            onTap: () {
+              createComm();
+            },
+            child: Text("Click Me"),
+          ),
         ),
       ),
     );

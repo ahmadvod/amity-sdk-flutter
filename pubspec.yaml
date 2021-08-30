@@ -28,7 +28,7 @@ flutter:
     platforms:
       android:
         package: com.example.amity_sdk_flutter
-        pluginClass: CommunityPlugin
+        pluginClass: AmityPlugin
       ios:
         pluginClass: AmitySdkFlutterPlugin
 
