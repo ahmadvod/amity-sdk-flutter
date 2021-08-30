@@ -1,3 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
   package="com.example.amity_sdk_flutter">
+    <uses-sdk android:minSdkVersion="21"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        tools:targetApi="m">
+
+    </application>
+
 </manifest>

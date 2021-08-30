@@ -1,6 +1,6 @@
 name: amity_sdk_flutter
 description: A new flutter plugin project.
-version: 0.0.1
+version: 0.0.3
 #homepage:
 
 environment:
@@ -28,7 +28,7 @@ flutter:
     platforms:
       android:
         package: com.example.amity_sdk_flutter
-        pluginClass: AmitySdkFlutterPlugin
+        pluginClass: CommunityPlugin
       ios:
         pluginClass: AmitySdkFlutterPlugin
 

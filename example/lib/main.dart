@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:amity_sdk_flutter/amity_sdk_flutter.dart';
+import 'package:amity_sdk_flutter/community_plugin_channel.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +29,9 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await AmitySdkFlutter.platformVersion ?? 'Unknown platform version';
+      // platformVersion = await AmitySdkFlutter.platformVersion ?? 'Unknown platform version';
+      // platformVersion = await AmitySdkFlutter.registerApp("b0ede85a388aa6634c638f4e535b178ad40a84b1ee316828") ?? 'Unknown platform version';
+      platformVersion = await CommunityPluginChannel.createCommunity() ?? "Not Created";
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
