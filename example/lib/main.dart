@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  String _platformVersion = 'Click Me!';
 
   @override
   void initState() {
@@ -48,12 +48,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   void createComm() async {
-    var categories = List<String>.filled(2, "", growable: false);
-    categories.add("hello");
-    categories.add("test");
-    await CommunityPluginChannel.createCommunity(
+    var categories = List<String>.filled(2, "uhu", growable: false);
+    // categories.add("hello");
+    // categories.add("test");
+    var resu = await CommunityPluginChannel.createCommunity(
       "MyFirstNewComm", true, "No description",categories , null
     );
+    print(resu);
+    setState(() {
+      if(resu != null) {
+        _platformVersion = resu;
+      } else {
+        _platformVersion = "Something went wrong";
+      }
+    });
   }
 
   void regUser() async {
@@ -76,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             onTap: () {
               createComm();
             },
-            child: Text("Click Me"),
+            child: Text(_platformVersion),
           ),
         ),
       ),
