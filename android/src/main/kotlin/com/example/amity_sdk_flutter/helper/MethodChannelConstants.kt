@@ -9,4 +9,7 @@ object MethodChannelConstants {
     final const val AUTH_USER_METHOD_NAME = "authenticateUser"
 
     final const val CREATE_COMMUNITY_METHOD_NAME = "createCommunity"
+    final const val JOIN_COMMUNITY_METHOD_NAME = "joinCommunity"
+
+    final const val CREATE_TEXT_POST_METHOD_NAME = "createTextPost"
 }

@@ -7,10 +7,6 @@ import com.example.amity_sdk_flutter.helper.MessageHelper
 import org.jetbrains.annotations.NotNull
 
 class AmityUser {
-    companion object {
-        const val API_KEY = "apiKey"
-        const val USER_ID_KEY = "userId"
-    }
 
     fun registerApp(@NotNull apiKey: String): String? {
         AmityCoreClient.setup(apiKey)
@@ -24,4 +20,8 @@ class AmityUser {
         return MessageHelper.generateSuccessMessage("Device Registered")
     }
 
+    companion object {
+        const val API_KEY = "apiKey"
+        const val USER_ID_KEY = "userId"
+    }
 }
