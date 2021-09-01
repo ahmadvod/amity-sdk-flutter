@@ -1,19 +1,26 @@
 package com.example.amity_sdk_flutter.feature
 
 import com.amity.socialcloud.sdk.social.AmitySocialClient
+import com.amity.socialcloud.sdk.social.feed.AmityUserFeedSortOption
 import com.example.amity_sdk_flutter.helper.LogUtil
+import com.example.amity_sdk_flutter.interfaces.RepositoryResponseListener
+import com.example.amity_sdk_flutter.interfaces.ResponseType
+import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.annotations.NotNull
 
-class AmityPost {
-    private val postRepository = AmitySocialClient.newFeedRepository()
+class AmityPost(
+    @NotNull val repositoryResponseListener: RepositoryResponseListener
+) {
+    private val feedRepository = AmitySocialClient.newFeedRepository()
 
     fun createTextPost(
         postText: String,
         postType: String,
         id: String?
     ) {
-        val feedRep = postRepository.createPost()
+        val feedRep = feedRepository.createPost()
         var type: PostType? = null
         try {
             type = PostType.valueOf(postType)
@@ -29,10 +36,10 @@ class AmityPost {
                         .build()
                         .post()
                         .doOnSuccess {
-
+                            repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.TEXT_POST)
                         }
                         .doOnError {
-
+                            repositoryResponseListener.onError("", it.message)
                         }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -45,10 +52,10 @@ class AmityPost {
                         .build()
                         .post()
                         .doOnSuccess {
-
+                            repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.TEXT_POST)
                         }
                         .doOnError {
-
+                            repositoryResponseListener.onError("", it.message)
                         }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -61,10 +68,10 @@ class AmityPost {
                         .build()
                         .post()
                         .doOnSuccess {
-
+                            repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.TEXT_POST)
                         }
                         .doOnError {
-
+                            repositoryResponseListener.onError("", it.message)
                         }
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -80,7 +87,7 @@ class AmityPost {
         id: String?,
         imagesUrl: String
     ) {
-        val feedRep = postRepository.createPost()
+        val feedRep = feedRepository.createPost()
         var type: PostType? = null
         try {
             type = PostType.valueOf(postType)
@@ -140,6 +147,24 @@ class AmityPost {
                 }
             }
         }
+    }
+
+    fun getPeerFeeds(
+        userId: String
+    ){
+        feedRepository
+            .getUserFeed(userId)
+            .includeDeleted(false)
+            .sortBy(AmityUserFeedSortOption.LAST_CREATED)
+            .build()
+            .query()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.GET_PEER_FEEDS)
+            }.doOnError {
+                repositoryResponseListener.onError("", it.message)
+            }.subscribe()
     }
 
     companion object {
