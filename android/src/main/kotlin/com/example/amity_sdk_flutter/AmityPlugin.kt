@@ -50,20 +50,16 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
             }
 
             MethodChannelConstants.JOIN_COMMUNITY_METHOD_NAME -> {
-                result.success(
-                    AmityCommunity(this).joinCommunity(
-                        call.argument<String>(AmityCommunity.COMMUNITY_NAME_KEY)!!
-                    )
+                AmityCommunity(this).joinCommunity(
+                    call.argument<String>(AmityCommunity.COMMUNITY_NAME_KEY)!!
                 )
             }
 
             MethodChannelConstants.CREATE_TEXT_POST_METHOD_NAME -> {
-                result.success(
-                    AmityPost().createTextPost(
-                        call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
-                        call.argument<String>(AmityPost.POST_TYPE_KEY)!!,
-                        call.argument<String>(AmityPost.ID_KEY)!!
-                    )
+                AmityPost(this).createTextPost(
+                    call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
+                    call.argument<String>(AmityPost.POST_TYPE_KEY)!!,
+                    call.argument<String>(AmityPost.ID_KEY)!!
                 )
             }
 

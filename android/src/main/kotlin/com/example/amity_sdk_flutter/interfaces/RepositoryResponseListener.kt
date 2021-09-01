@@ -6,5 +6,5 @@ interface RepositoryResponseListener {
 }
 
 enum class ResponseType {
-    CREATE_COMMUNITY, JOIN_COMMUNITY
+    CREATE_COMMUNITY, JOIN_COMMUNITY, TEXT_POST, GET_PEER_FEEDS
 }
