@@ -12,4 +12,10 @@ object MethodChannelConstants {
     final const val JOIN_COMMUNITY_METHOD_NAME = "joinCommunity"
 
     final const val CREATE_TEXT_POST_METHOD_NAME = "createTextPost"
+    final const val CREATE_TEXT_IMAGE_POST_METHOD_NAME = "createImageWithTextPost"
+
+    final const val FOLLOW_USER_METHOD_NAME = "followUser"
+    final const val GET_FRIEND_REQUEST_LIST_METHOD_NAME = "getFriendRequestList"
+    final const val ACCEPT_USER_FRIEND_REQUEST_METHOD_NAME = "acceptUserFriendRequest"
+    final const val DECLINE_REQUEST_METHOD_NAME = "unfriendOrDeclineRequest"
 }

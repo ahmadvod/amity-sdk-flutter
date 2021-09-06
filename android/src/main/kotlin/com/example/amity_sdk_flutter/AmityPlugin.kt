@@ -1,6 +1,7 @@
 package com.example.amity_sdk_flutter
 
 import com.example.amity_sdk_flutter.feature.AmityCommunity
+import com.example.amity_sdk_flutter.feature.AmityConnections
 import com.example.amity_sdk_flutter.feature.AmityPost
 import com.example.amity_sdk_flutter.feature.AmityUser
 import com.example.amity_sdk_flutter.helper.MethodChannelConstants
@@ -55,11 +56,42 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
+            MethodChannelConstants.CREATE_TEXT_IMAGE_POST_METHOD_NAME -> {
+                AmityPost(this).createImageWithTextPost(
+                    call.argument(AmityPost.POST_TEXT_KEY)!!,
+                    call.argument(AmityPost.POST_TYPE_KEY)!!,
+                    call.argument(AmityPost.ID_KEY)!!,
+                    call.argument(AmityPost.IMAGE_URL_KEY)!!
+                )
+            }
+
             MethodChannelConstants.CREATE_TEXT_POST_METHOD_NAME -> {
                 AmityPost(this).createTextPost(
                     call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
                     call.argument<String>(AmityPost.POST_TYPE_KEY)!!,
                     call.argument<String>(AmityPost.ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.FOLLOW_USER_METHOD_NAME -> {
+                AmityConnections(this).followUser(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
+                )
+            }
+            
+            MethodChannelConstants.GET_FRIEND_REQUEST_LIST_METHOD_NAME -> {
+                AmityConnections(this).getFriendRequestList()
+            }
+
+            MethodChannelConstants.ACCEPT_USER_FRIEND_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).acceptUserFriendRequest(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.DECLINE_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).unfriendOrDeclineRequest(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
                 )
             }
 
