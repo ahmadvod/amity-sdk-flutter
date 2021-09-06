@@ -37,7 +37,7 @@ class AmityConnections(
             .relationship()
             .me()
             .getFollowers()
-            .status(AmityFollowStatusFilter.ACCEPTED)
+            .status(AmityFollowStatusFilter.PENDING)
             .build()
             .query()
             .subscribeOn(Schedulers.io())
@@ -80,6 +80,25 @@ class AmityConnections(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnComplete {
                 repositoryResponseListener.onSuccess("", "rejected", ResponseType.FRIEND_REQUEST_DECLINE)
+            }
+            .doOnError {
+                repositoryResponseListener.onError("", it.message)
+            }
+            .subscribe()
+    }
+
+    fun getFollowersList() {
+        userRepository
+            .relationship()
+            .me()
+            .getFollowers()
+            .status(AmityFollowStatusFilter.ACCEPTED)
+            .build()
+            .query()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext {
+                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.FRIEND_REQUEST_LIST)
             }
             .doOnError {
                 repositoryResponseListener.onError("", it.message)
