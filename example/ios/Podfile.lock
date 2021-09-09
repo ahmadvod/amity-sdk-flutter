@@ -1,0 +1,36 @@
+PODS:
+  - amity_sdk_flutter (0.0.1):
+    - AmitySDK
+    - Flutter
+  - AmitySDK (5.5.0):
+    - Realm (~> 10.12.0)
+  - Flutter (1.0.0)
+  - Realm (10.12.0):
+    - Realm/Headers (= 10.12.0)
+  - Realm/Headers (10.12.0)
+
+DEPENDENCIES:
+  - amity_sdk_flutter (from `.symlinks/plugins/amity_sdk_flutter/ios`)
+  - AmitySDK
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  trunk:
+    - AmitySDK
+    - Realm
+
+EXTERNAL SOURCES:
+  amity_sdk_flutter:
+    :path: ".symlinks/plugins/amity_sdk_flutter/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  amity_sdk_flutter: 9483706b83632ae4aa1e08ad6660eb966631d088
+  AmitySDK: 0e5d23508aeac9e8926882c5b6b5528e6c79927e
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  Realm: 32488213acb44660539c619d620cec1bac046166
+
+PODFILE CHECKSUM: b15b141c77354e30df674dc00eef58ecede1d8bc
+
+COCOAPODS: 1.10.1
