@@ -194,7 +194,7 @@ class AmityPost(
         }
     }
 
-    fun getPeerFeeds(
+    fun getUserPosts(
         userId: String
     ){
         feedRepository

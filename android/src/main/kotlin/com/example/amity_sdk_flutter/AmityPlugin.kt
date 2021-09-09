@@ -65,6 +65,12 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
+            MethodChannelConstants.GET_USER_POST_METHOD_KEY -> {
+                AmityPost(this).getUserPosts(
+                    call.argument(AmityPost.ID_KEY)!!
+                )
+            }
+
             MethodChannelConstants.CREATE_TEXT_POST_METHOD_NAME -> {
                 AmityPost(this).createTextPost(
                     call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
@@ -73,8 +79,8 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
-            MethodChannelConstants.FOLLOW_USER_METHOD_NAME -> {
-                AmityConnections(this).followUser(
+            MethodChannelConstants.SEND_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).sendRequest(
                     call.argument<String>(AmityConnections.ID_KEY)!!
                 )
             }
@@ -83,14 +89,14 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 AmityConnections(this).getFriendRequestList()
             }
 
-            MethodChannelConstants.ACCEPT_USER_FRIEND_REQUEST_METHOD_NAME -> {
-                AmityConnections(this).acceptUserFriendRequest(
+            MethodChannelConstants.ACCEPT_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).acceptRequest(
                     call.argument<String>(AmityConnections.ID_KEY)!!
                 )
             }
 
-            MethodChannelConstants.DECLINE_REQUEST_METHOD_NAME -> {
-                AmityConnections(this).unfriendOrDeclineRequest(
+            MethodChannelConstants.UNFRIEND_METHOD_NAME -> {
+                AmityConnections(this).unfriend(
                     call.argument<String>(AmityConnections.ID_KEY)!!
                 )
             }

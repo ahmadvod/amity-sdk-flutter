@@ -14,7 +14,7 @@ class AmityConnections(
 ) {
     private val userRepository = AmityCoreClient.newUserRepository()
 
-    fun followUser(
+    fun sendRequest(
         userId: String
     ){
         userRepository
@@ -51,7 +51,7 @@ class AmityConnections(
             .subscribe()
     }
 
-    fun acceptUserFriendRequest(
+    fun acceptRequest(
         userId: String
     ){
         userRepository
@@ -69,7 +69,7 @@ class AmityConnections(
             .subscribe()
     }
 
-    fun unfriendOrDeclineRequest(
+    fun unfriend(
         userId: String
     ){
         userRepository
