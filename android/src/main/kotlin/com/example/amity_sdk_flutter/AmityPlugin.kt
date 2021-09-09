@@ -1,6 +1,7 @@
 package com.example.amity_sdk_flutter
 
 import com.example.amity_sdk_flutter.feature.AmityCommunity
+import com.example.amity_sdk_flutter.feature.AmityConnections
 import com.example.amity_sdk_flutter.feature.AmityPost
 import com.example.amity_sdk_flutter.feature.AmityUser
 import com.example.amity_sdk_flutter.helper.MethodChannelConstants
@@ -50,20 +51,53 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
             }
 
             MethodChannelConstants.JOIN_COMMUNITY_METHOD_NAME -> {
-                result.success(
-                    AmityCommunity(this).joinCommunity(
-                        call.argument<String>(AmityCommunity.COMMUNITY_NAME_KEY)!!
-                    )
+                AmityCommunity(this).joinCommunity(
+                    call.argument<String>(AmityCommunity.COMMUNITY_NAME_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.CREATE_TEXT_IMAGE_POST_METHOD_NAME -> {
+                AmityPost(this).createImageWithTextPost(
+                    call.argument(AmityPost.POST_TEXT_KEY)!!,
+                    call.argument(AmityPost.POST_TYPE_KEY)!!,
+                    call.argument(AmityPost.ID_KEY)!!,
+                    call.argument(AmityPost.IMAGE_URL_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.GET_USER_POST_METHOD_KEY -> {
+                AmityPost(this).getUserPosts(
+                    call.argument(AmityPost.ID_KEY)!!
                 )
             }
 
             MethodChannelConstants.CREATE_TEXT_POST_METHOD_NAME -> {
-                result.success(
-                    AmityPost().createTextPost(
-                        call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
-                        call.argument<String>(AmityPost.POST_TYPE_KEY)!!,
-                        call.argument<String>(AmityPost.ID_KEY)!!
-                    )
+                AmityPost(this).createTextPost(
+                    call.argument<String>(AmityPost.POST_TEXT_KEY)!!,
+                    call.argument<String>(AmityPost.POST_TYPE_KEY)!!,
+                    call.argument<String>(AmityPost.ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.SEND_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).sendRequest(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
+                )
+            }
+            
+            MethodChannelConstants.GET_FRIEND_REQUEST_LIST_METHOD_NAME -> {
+                AmityConnections(this).getFriendRequestList()
+            }
+
+            MethodChannelConstants.ACCEPT_REQUEST_METHOD_NAME -> {
+                AmityConnections(this).acceptRequest(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.UNFRIEND_METHOD_NAME -> {
+                AmityConnections(this).unfriend(
+                    call.argument<String>(AmityConnections.ID_KEY)!!
                 )
             }
 
