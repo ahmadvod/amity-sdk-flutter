@@ -1,23 +1,24 @@
 package com.example.amity_sdk_flutter.feature
 
-import android.app.Activity
-import android.util.Log
-import android.view.View
+import android.net.Uri
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.amity.socialcloud.sdk.AmityCoreClient
 import com.amity.socialcloud.sdk.chat.AmityChatClient
-import com.amity.socialcloud.sdk.chat.AmityMessageRepository
-import com.amity.socialcloud.sdk.chat.channel.AmityChannel
 import com.amity.socialcloud.sdk.chat.message.AmityMessage
-import io.reactivex.Flowable
+import com.example.amity_sdk_flutter.interfaces.RepositoryResponseListener
+import com.example.amity_sdk_flutter.interfaces.ResponseType
+import com.example.amity_sdk_flutter.model.AmityChannelObj
+import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import org.jetbrains.annotations.NotNull
 
-const val LOG_VAL = "MyLogStatus => "
-class AmityChat {
-    val messagesLiveData = MutableLiveData<AmityMessage>()
-    val messageRepository = AmityChatClient.newMessageRepository()
+//const val LOG_VAL = "MyLogStatus => "
 
+class AmityChat(
+    val repositoryResponseListener: RepositoryResponseListener
+) {
+    private val messageRepository = AmityChatClient.newMessageRepository()
     private val channelRepository = AmityChatClient.newChannelRepository()
 
     fun sendTextMessage(txt: String, channelId: String) {
@@ -27,79 +28,116 @@ class AmityChat {
             .build()
             .send()
             .subscribe({
-                Log.d(LOG_VAL, "done")
+                repositoryResponseListener.onSuccess("Sent", "", ResponseType.SEND_TEXT_MSG)
+//                LogUtil.log(LOG_VAL, "done")
             },{
-                Log.d(LOG_VAL, it.message!!)
+                repositoryResponseListener.onError("", it.message)
+//                LogUtil.log(LOG_VAL, it.message!!)
             })
 
-        Log.d(LOG_VAL, "Sending data is $txt and $channelId")
-//            .subscribe()
+//        LogUtil.log(LOG_VAL, "Sending data is $txt and $channelId")
     }
 
-    fun getChatClient(channelId: String, activity: LifecycleOwner) {
-        LiveDataReactiveStreams.fromPublisher(AmityChatClient.newChannelRepository().getChannel(channelId)).observe(activity, Observer {
-            if (it.getType() == AmityChannel.Type.BROADCAST) {
-                Log.d(LOG_VAL, it.getDisplayName())
-            }
-
-            Log.d(LOG_VAL, it.getDisplayName())
-        })
-         messageRepository.getMessages("diff")
+    fun sendImageMessage(imgPath: String, channelId: String) {
+        messageRepository.createMessage(channelId)
+            .with()
+            .image(Uri.parse(imgPath))
+            .caption("It's a beautiful day")
+            .isFullImage(true)
+            .build()
+            .send()
+            .subscribe()
     }
 
-    fun getMessages() {
-            messageRepository.getMessages("3a2dfb1d31dffb243c2b5b34838936d2")
+    fun getChannelMessages(channelId: String) {
+            messageRepository.getMessages(channelId)
             .stackFromEnd(true)
             .build()
             .query()
-            .subscribe( {
-                Log.d(LOG_VAL, "${it.size}")
-            } )
+            .subscribe({
+                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.CHANNEL_COMPLETE_MSGS)
+//                LogUtil.log(LOG_VAL, "${it.size}")
+            }, {
+                repositoryResponseListener.onError("", it.message)
+            })
     }
 
-    fun createChannel(userId: String) {
+    fun createConversationChannel(userId: String, displayName: String) {
         val channelCreator = channelRepository.createChannel()
             .conversationType()
             .withUserId(userId)
 
-        channelCreator.displayName("myDisplayName")
+        channelCreator.displayName(displayName)
 
         channelCreator.build()
             .create()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d(LOG_VAL, "created")
+                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.CREATE_CONVERSATION_CHANNEL)
+//                LogUtil.log(LOG_VAL, "created")
             }, {
-                Log.d(LOG_VAL, "failed")
+                repositoryResponseListener.onError("", it.message)
+//                LogUtil.log(LOG_VAL, "failed")
             })
     }
 
     fun getUserConversationChannels() {
+//        AmityCoreClient.registerDevice("pixelNew")//change this to user_id while implementing
+//            .displayName("pixi new dev")
+//            .build()
+//            .submit()
+
         channelRepository.getChannels()
             .conversationType()
             .build()
             .query()
-            .subscribe( {
-                Log.d(LOG_VAL, "${it.size}")
-            } )
+            .subscribe {it ->
+                if(it.size > 0) {
+                    val list = ArrayList<AmityChannelObj>()
+                    for (v in 0..it.size - 1) {
+                        val channelObj = it.get(v)!!
+                        val obj = AmityChannelObj(
+                            channelObj.getChannelId(),
+                            channelObj.getDisplayName(),
+                            channelObj.getMemberCount(),
+                            channelObj.getMessageCount()
+                        )
+                        list.add(obj)
+                    }
+                    repositoryResponseListener.onSuccess("", Gson().toJson(list), ResponseType.USER_ALL_CONVERSATION_CHANNELS)
+//                        LogUtil.log(LOG_VAL, "${list.size}")
+                }
+            }
+    /*, {
+                    repositoryResponseListener.onError("", it.message)
+//                    LogUtil.log(LOG_VAL, "failed")
+                }*/
     }
 
-    //this function is not worki9ng
-    fun getNewMessage(activity: LifecycleOwner){
-//        val flowableStream: Flowable<AmityMessage> =
-        val message = getMessageCollection()
-        message.observe(activity, Observer {
-            Log.d(LOG_VAL, "${it.toString()}")
-        })
+    fun getNewMessage(channelId: String){
+        getMessageCollection(channelId)
     }
 
-    fun getMessageCollection(): LiveData<PagedList<AmityMessage>> {
+    fun getMessageCollection(channelId: String): LiveData<PagedList<AmityMessage>> {
         return LiveDataReactiveStreams.fromPublisher(
-            messageRepository.getMessages("3a2dfb1d31dffb243c2b5b34838936d2")
+            messageRepository.getMessages(channelId)
                 .parentId(null)
                 .stackFromEnd(true)
                 .build()
                 .query()
+                .doOnNext {
+                    repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.RECEIVE_NEW_MSG)
+                }
+                .doOnError {
+                    repositoryResponseListener.onError("", it.message)
+                }
         )
+    }
+
+    companion object {
+        const val CHANNEL_ID_KEY = "channel_id"
+        const val USER_ID_KEY = "user_id"
+        const val MSG_TXT_KEY = "msg_text_key"
+        const val DISPLAY_NAME = "display_name"
     }
 }

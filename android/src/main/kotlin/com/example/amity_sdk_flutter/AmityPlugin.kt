@@ -1,9 +1,6 @@
 package com.example.amity_sdk_flutter
 
-import com.example.amity_sdk_flutter.feature.AmityCommunity
-import com.example.amity_sdk_flutter.feature.AmityConnections
-import com.example.amity_sdk_flutter.feature.AmityPost
-import com.example.amity_sdk_flutter.feature.AmityUser
+import com.example.amity_sdk_flutter.feature.*
 import com.example.amity_sdk_flutter.helper.MethodChannelConstants
 import com.example.amity_sdk_flutter.interfaces.RepositoryResponseListener
 import com.example.amity_sdk_flutter.interfaces.ResponseType
@@ -98,6 +95,36 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
             MethodChannelConstants.UNFRIEND_METHOD_NAME -> {
                 AmityConnections(this).unfriend(
                     call.argument<String>(AmityConnections.ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.CREATE_CONVERSATION_CHANNEL_METHOD_NAME -> {
+                AmityChat(this).createConversationChannel(
+                    call.argument<String>(AmityChat.USER_ID_KEY)!!,
+                    call.argument<String>(AmityChat.DISPLAY_NAME)!!
+                )
+            }
+
+            MethodChannelConstants.SEND_TEXT_MSG_METHOD_NAME -> {
+                AmityChat(this).sendTextMessage(
+                    call.argument<String>(AmityChat.MSG_TXT_KEY)!!,
+                    call.argument<String>(AmityChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.GET_CHANNEL_MSGS_METHOD_NAME -> {
+                AmityChat(this).getChannelMessages(
+                    call.argument<String>(AmityChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.GET_USER_CONVERSATION_CHANNELS_METHOD_NAME -> {
+                AmityChat(this).getUserConversationChannels()
+            }
+
+            MethodChannelConstants.REGISTER_FOR_NEW_MSG_METHOD_KEY -> {
+                AmityChat(this).getNewMessage(
+                    call.argument<String>(AmityChat.CHANNEL_ID_KEY)!!
                 )
             }
 
