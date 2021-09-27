@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amity_sdk_flutter/chat_plugin_channel.dart';
 import 'package:amity_sdk_flutter/community_plugin_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,8 +31,8 @@ class _MyAppState extends State<MyApp> {
     try {
       // platformVersion = await AmitySdkFlutter.platformVersion ?? 'Unknown platform version';
       // platformVersion = await AmitySdkFlutter.
-      platformVersion = await CommunityPluginChannel.registerApp(
-              "b0ede85a388aa6634c638f4e535b178ad40a84b1ee316828") ??
+      platformVersion = await ChatPluginChannel.getChannelMessages(
+              "0a2aea6b17146af137c64c7d74dc03f9") ??
           'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';

@@ -25,4 +25,5 @@ object MethodChannelConstants {
     const val CREATE_CONVERSATION_CHANNEL_METHOD_NAME = "createConversationChannel"
     const val GET_USER_CONVERSATION_CHANNELS_METHOD_NAME = "getUserConversationChannels"
     const val REGISTER_FOR_NEW_MSG_METHOD_KEY = "getNewMessage"
+    const val REGISTER_USER_DEVICE_METHOD_KEY = "registerUserDevice"
 }

@@ -128,6 +128,13 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
+            MethodChannelConstants.REGISTER_USER_DEVICE_METHOD_KEY -> {
+                AmityChat(this).registerUserDevice(
+                    call.argument<String>(AmityChat.USER_ID_KEY)!!,
+                    call.argument<String>(AmityChat.DISPLAY_NAME)!!
+                )
+            }
+
             else -> {
                 result.notImplemented()
             }
@@ -139,6 +146,6 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
     }
 
     override fun onError(extra: String, error: String?) {
-        channelResult.success(error)
+//        channelResult.error(extra, error, "")
     }
 }

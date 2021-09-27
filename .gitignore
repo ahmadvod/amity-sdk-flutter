@@ -28,3 +28,6 @@ android/.gradle/buildOutputCleanup
 *.lock
 *.properties
 .flutter-plugins-dependencies
+gradlew
+gradlew.bat
+gradle-wrapper.jar

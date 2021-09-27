@@ -6,9 +6,11 @@ import androidx.paging.PagedList
 import com.amity.socialcloud.sdk.AmityCoreClient
 import com.amity.socialcloud.sdk.chat.AmityChatClient
 import com.amity.socialcloud.sdk.chat.message.AmityMessage
+import com.example.amity_sdk_flutter.helper.LogUtil
 import com.example.amity_sdk_flutter.interfaces.RepositoryResponseListener
 import com.example.amity_sdk_flutter.interfaces.ResponseType
 import com.example.amity_sdk_flutter.model.AmityChannelObj
+import com.example.amity_sdk_flutter.model.AmityMessageObj
 import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.jetbrains.annotations.NotNull
@@ -30,7 +32,7 @@ class AmityChat(
             .subscribe({
                 repositoryResponseListener.onSuccess("Sent", "", ResponseType.SEND_TEXT_MSG)
 //                LogUtil.log(LOG_VAL, "done")
-            },{
+            }, {
                 repositoryResponseListener.onError("", it.message)
 //                LogUtil.log(LOG_VAL, it.message!!)
             })
@@ -50,14 +52,29 @@ class AmityChat(
     }
 
     fun getChannelMessages(channelId: String) {
-            messageRepository.getMessages(channelId)
+        LogUtil.log("Received Channel Id -> $channelId")
+        messageRepository.getMessages(channelId)
             .stackFromEnd(true)
             .build()
             .query()
-            .subscribe({
-                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.CHANNEL_COMPLETE_MSGS)
-//                LogUtil.log(LOG_VAL, "${it.size}")
-            }, {
+            .subscribe ({
+                if (it.size > 0) {
+                    val list = ArrayList<AmityMessageObj>()
+                    it.forEachIndexed { position, obj ->
+                        val msgObj = AmityMessageObj(
+                            obj.getChannelId(),
+                            getMsgBody(obj.getDataType().name, obj.getData()),
+                            obj.getMessageId(),
+                            obj.getDataType().name,
+                            obj.getCreatedAt().millis,
+                            obj.getUserId()
+                        )
+
+                        list.add(msgObj)
+                    }
+                    repositoryResponseListener.onSuccess("", Gson().toJson(list), ResponseType.CHANNEL_COMPLETE_MSGS)
+                }
+            },{
                 repositoryResponseListener.onError("", it.message)
             })
     }
@@ -73,26 +90,29 @@ class AmityChat(
             .create()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.CREATE_CONVERSATION_CHANNEL)
-//                LogUtil.log(LOG_VAL, "created")
+                val obj = AmityChannelObj(
+                    it!!.getChannelId(),
+                    it!!.getDisplayName(),
+                    it!!.getMemberCount(),
+                    it!!.getMessageCount()
+                )
+                repositoryResponseListener.onSuccess(
+                    "",
+                    Gson().toJson(obj),
+                    ResponseType.CREATE_CONVERSATION_CHANNEL
+                )
             }, {
                 repositoryResponseListener.onError("", it.message)
-//                LogUtil.log(LOG_VAL, "failed")
             })
     }
 
     fun getUserConversationChannels() {
-//        AmityCoreClient.registerDevice("pixelNew")//change this to user_id while implementing
-//            .displayName("pixi new dev")
-//            .build()
-//            .submit()
-
         channelRepository.getChannels()
             .conversationType()
             .build()
             .query()
-            .subscribe {it ->
-                if(it.size > 0) {
+            .subscribe { it ->
+                if (it.size > 0) {
                     val list = ArrayList<AmityChannelObj>()
                     for (v in 0..it.size - 1) {
                         val channelObj = it.get(v)!!
@@ -104,17 +124,28 @@ class AmityChat(
                         )
                         list.add(obj)
                     }
-                    repositoryResponseListener.onSuccess("", Gson().toJson(list), ResponseType.USER_ALL_CONVERSATION_CHANNELS)
+                    repositoryResponseListener.onSuccess(
+                        "",
+                        Gson().toJson(list),
+                        ResponseType.USER_ALL_CONVERSATION_CHANNELS
+                    )
 //                        LogUtil.log(LOG_VAL, "${list.size}")
                 }
             }
-    /*, {
-                    repositoryResponseListener.onError("", it.message)
-//                    LogUtil.log(LOG_VAL, "failed")
-                }*/
+        /*, {
+                        repositoryResponseListener.onError("", it.message)
+    //                    LogUtil.log(LOG_VAL, "failed")
+                    }*/
     }
 
-    fun getNewMessage(channelId: String){
+    fun registerUserDevice(userId: String, displayName: String) {
+        AmityCoreClient.registerDevice(userId)
+            .displayName(displayName)
+            .build()
+            .submit()
+    }
+
+    fun getNewMessage(channelId: String) {
         getMessageCollection(channelId)
     }
 
@@ -126,7 +157,11 @@ class AmityChat(
                 .build()
                 .query()
                 .doOnNext {
-                    repositoryResponseListener.onSuccess("", Gson().toJson(it), ResponseType.RECEIVE_NEW_MSG)
+                    repositoryResponseListener.onSuccess(
+                        "",
+                        Gson().toJson(it),
+                        ResponseType.RECEIVE_NEW_MSG
+                    )
                 }
                 .doOnError {
                     repositoryResponseListener.onError("", it.message)
@@ -137,7 +172,18 @@ class AmityChat(
     companion object {
         const val CHANNEL_ID_KEY = "channel_id"
         const val USER_ID_KEY = "user_id"
-        const val MSG_TXT_KEY = "msg_text_key"
+        const val MSG_TXT_KEY = "msg_body"
         const val DISPLAY_NAME = "display_name"
+    }
+
+    fun getMsgBody(msgType: String, msgData: AmityMessage.Data): String {
+        when (msgType) {
+            "TEXT" -> {
+                return (msgData as AmityMessage.Data.TEXT).getText()
+            }
+
+            else ->
+                return ""
+        }
     }
 }
