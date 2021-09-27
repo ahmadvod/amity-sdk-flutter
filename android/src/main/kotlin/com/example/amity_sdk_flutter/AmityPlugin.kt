@@ -135,6 +135,20 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
+            MethodChannelConstants.SEND_PHOTO_MSG_METHOD_NAME -> {
+                AmityChat(this).sendImageMessage(
+                    call.argument<String>(AmityChat.IMG_PATH)!!,
+                    call.argument<String>(AmityChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.SEND_VIDEO_MSG_METHOD_NAME -> {
+                AmityChat(this).sendVideoMessage(
+                    call.argument<String>(AmityChat.VDO_PATH)!!,
+                    call.argument<String>(AmityChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
             else -> {
                 result.notImplemented()
             }

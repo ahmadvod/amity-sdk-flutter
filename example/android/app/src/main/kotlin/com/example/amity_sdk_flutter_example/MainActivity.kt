@@ -35,83 +35,87 @@ class MainActivity: FlutterActivity() {
      * one thing remains is to set observer to get newly added message - DONE
      */
 
-    //    one channelID = 3a2dfb1d31dffb243c2b5b34838936d2
+    /**
+     * userId = techno_new
+     * userId = pixi_new
+     * channelID = aef4e36407e64fc0823f9c5d5d252e45
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.main_activity)
+        setContentView(R.layout.main_activity)
 
-//        msgClickTxt = findViewById(R.id.msgClickTxt)
-//        channelClickTxt = findViewById(R.id.channelClickTxt)
-//        msgzClickTxt = findViewById(R.id.msgzClickTxt)
+        msgClickTxt = findViewById(R.id.msgClickTxt)
+        channelClickTxt = findViewById(R.id.channelClickTxt)
+        msgzClickTxt = findViewById(R.id.msgzClickTxt)
 
-//        AmityCoreClient.registerDevice("techno")//change this to user_id while implementing
+//        AmityCoreClient.registerDevice("techno_new")//change this to user_id while implementing
 //            .displayName("techno dev")
 //            .build()
 //            .submit()
 
-//        val obj = AmityChat(object: RepositoryResponseListener {
-//            override fun onSuccess(extra: String, msg: String, responseType: ResponseType) {
-//                when(responseType) {
-//                    ResponseType.SEND_TEXT_MSG -> {
-//                        LogUtil.log("Msg Sent")
-//                    }
-//
-//                    ResponseType.CHANNEL_COMPLETE_MSGS -> {
-//                        val myType = object : TypeToken<List<AmityMessage>>() {}.type
-//                        val msgList = Gson().fromJson<List<AmityMessage>>(msg, myType)
-//                        if(msgList != null && msgList.isNotEmpty()) {
-//                            LogUtil.log("Channel Complete Msgz -> ${msgList.get(0).getData().toString()}")
-//                        }
-//                    }
-//
-//                    ResponseType.CREATE_CONVERSATION_CHANNEL -> {
-//                        val amityChannel = Gson().fromJson(msg, AmityChannel::class.java)
-//                        LogUtil.log("Created Channel id is -> ${amityChannel.getChannelId()}")
-//                    }
-//
-//                    ResponseType.USER_ALL_CONVERSATION_CHANNELS -> {
-//                        val myType = object : TypeToken<List<AmityChannelObj>>() {}.type
-//                        val channelList = Gson().fromJson<List<AmityChannelObj>>(msg, myType)
-//                        if(channelList != null && channelList.isNotEmpty()) {
-//                            LogUtil.log("User All Channel Id Is -> ${channelList.get(0).channelId}")
-//                        }
-//                    }
-//
-//                    ResponseType.RECEIVE_NEW_MSG -> {
-//                        val myType = object : TypeToken<List<AmityMessage>>() {}.type
-//                        val msgList = Gson().fromJson<List<AmityMessage>>(msg, myType)
-//                        if(msgList != null && msgList.isNotEmpty()) {
-//                            LogUtil.log("New Msg Received -> ${msgList.get(0).getData().toString()}")
-//                        }
-//                    }
-//                }
-//            }
-//
-//            override fun onError(extra: String, error: String?) {
-//                LogUtil.log("onError -> ${error!!}")
-//            }
-//
-//        })
-//
-//        msgClickTxt.setOnClickListener {
-//            obj.sendTextMessage("${getDeviceName()} _${Random(10).nextInt()}", "0a2aea6b17146af137c64c7d74dc03f9")
-//        }
-//
-//        channelClickTxt.setOnClickListener {
-//            obj.getUserConversationChannels()
-//        }
-//
-//        msgzClickTxt.setOnClickListener {
-//            obj.getChannelMessages("0a2aea6b17146af137c64c7d74dc03f9")
-//        }
-//        obj.createConversationChannel("techno", "")
+        val obj = AmityChat(object: RepositoryResponseListener {
+            override fun onSuccess(extra: String, msg: String, responseType: ResponseType) {
+                when(responseType) {
+                    ResponseType.SEND_TEXT_MSG -> {
+                        LogUtil.log("Msg Sent")
+                    }
+
+                    ResponseType.CHANNEL_COMPLETE_MSGS -> {
+                        val myType = object : TypeToken<List<AmityMessage>>() {}.type
+                        val msgList = Gson().fromJson<List<AmityMessage>>(msg, myType)
+                        if(msgList != null && msgList.isNotEmpty()) {
+                            LogUtil.log("Channel Complete Msgz -> ${msgList.get(0).getData().toString()}")
+                        }
+                    }
+
+                    ResponseType.CREATE_CONVERSATION_CHANNEL -> {
+                        val amityChannel = Gson().fromJson(msg, AmityChannel::class.java)
+                        LogUtil.log("Created Channel id is -> ${amityChannel.getChannelId()}")
+                    }
+
+                    ResponseType.USER_ALL_CONVERSATION_CHANNELS -> {
+                        val myType = object : TypeToken<List<AmityChannelObj>>() {}.type
+                        val channelList = Gson().fromJson<List<AmityChannelObj>>(msg, myType)
+                        if(channelList != null && channelList.isNotEmpty()) {
+                            LogUtil.log("User All Channel Id Is -> ${channelList.get(0).channelId}")
+                        }
+                    }
+
+                    ResponseType.RECEIVE_NEW_MSG -> {
+                        val myType = object : TypeToken<List<AmityMessage>>() {}.type
+                        val msgList = Gson().fromJson<List<AmityMessage>>(msg, myType)
+                        if(msgList != null && msgList.isNotEmpty()) {
+                            LogUtil.log("New Msg Received -> ${msgList.get(0).getData().toString()}")
+                        }
+                    }
+                }
+            }
+
+            override fun onError(extra: String, error: String?) {
+                LogUtil.log("onError -> ${error!!}")
+            }
+
+        })
+
+        msgClickTxt.setOnClickListener {
+            obj.sendTextMessage("${getDeviceName()} _${Random(10).nextInt()}", "aef4e36407e64fc0823f9c5d5d252e45")
+        }
+
+        channelClickTxt.setOnClickListener {
+            obj.getUserConversationChannels()
+        }
+
+        msgzClickTxt.setOnClickListener {
+            obj.getChannelMessages("aef4e36407e64fc0823f9c5d5d252e45")
+        }
+//        obj.createConversationChannel("techno_new", "myTechno1")
 //        obj.joinChannel("0ada304cec29b19aede7b6eb5497d8ba")
-//        obj.sendTextMessage("${getDeviceName()} _${Random(100).nextInt()}", "3a2dfb1d31dffb243c2b5b34838936d2")
+//        obj.sendTextMessage( "${getDeviceName()} _${Random(100).nextInt()}", "3a2dfb1d31dffb243c2b5b34838936d2")
 //        obj.getChatClient("diff", this)
 //        obj.getMessages()
 //        obj.getUserConversationChannels()
-//        obj.getNewMessage("0a2aea6b17146af137c64c7d74dc03f9")
-//        LogUtil.log(getDeviceName())
+        obj.getNewMessage("aef4e36407e64fc0823f9c5d5d252e45", this)
+        LogUtil.log(getDeviceName())
     }
 
     fun getDeviceName(): String {

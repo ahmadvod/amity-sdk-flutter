@@ -50,4 +50,34 @@ class ChatPluginChannel {
         <String, dynamic>{'msg_body': body, 'channel_id': channelId});
     return result;
   }
+
+  static Future<String?> receiveNewMessage(
+      String channelId
+      ) async {
+    final String result = await _channel.invokeMethod(
+      'getNewMessage',
+        <String, dynamic>{'channel_id': channelId});
+
+    return result;
+  }
+
+  static Future<String?> sendPhotoMsg(
+      String path, String channelId
+      ) async {
+    final String result = await _channel.invokeMethod(
+        'sendImageMessage',
+        <String, dynamic>{'img_path': path,'channel_id': channelId});
+
+    return result;
+  }
+
+  static Future<String?> sendVideoMsg(
+      String path, String channelId
+      ) async {
+    final String result = await _channel.invokeMethod(
+        'sendVideoMessage',
+        <String, dynamic>{'vdo_path': path,'channel_id': channelId});
+
+    return result;
+  }
 }
