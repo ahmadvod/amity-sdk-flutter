@@ -149,6 +149,30 @@ class AmityPlugin : FlutterPlugin, MethodCallHandler, RepositoryResponseListener
                 )
             }
 
+            MethodChannelConstants.CREATE_NEW_GROUP_CHAT_CHANNEL_METHOD_NAME -> {
+                AmityGroupChat(this).createNewGroup(
+                    call.argument<String>(AmityGroupChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.JOIN_GROUP_CHAT_CHANNEL_METHOD_NAME -> {
+                AmityGroupChat(this).joinGroup(
+                    call.argument<String>(AmityGroupChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.GROUP_CHAT_CHANNEL_MEMBERS_METHOD_NAME -> {
+                AmityGroupChat(this).getChannelMembers(
+                    call.argument<String>(AmityGroupChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
+            MethodChannelConstants.GROUP_CHAT_CHANNEL_DETAIL_METHOD_NAME -> {
+                AmityGroupChat(this).getChannelDetail(
+                    call.argument<String>(AmityGroupChat.CHANNEL_ID_KEY)!!
+                )
+            }
+
             else -> {
                 result.notImplemented()
             }
